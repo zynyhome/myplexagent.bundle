@@ -1,17 +1,2 @@
 [
-	{
-		"id": "PAPAGO_CLIENT_ID",
-		"label": "PAPAGO_CLIENT_ID:",
-		"type": "text"
-	},
-	{
-		"id": "PAPAGO_CLIENT_SECRET",
-		"label": "PAPAGO_CLIENT_SECRET:",
-		"type": "text",
-	},
-	{
-		"id": "POSTER_SPLIT_PAGE_URL",
-		"label": "POSTER_SPLIT_PAGE_URL:",
-		"type": "text",
-	}
 ]
