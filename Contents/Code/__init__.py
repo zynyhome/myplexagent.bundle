@@ -5,6 +5,7 @@ import json
 import ssl
 
 def Start():
+	Log('start my agent')
 	pass
 
 class AvgleAgent(Agent.Movies):
@@ -12,7 +13,7 @@ class AvgleAgent(Agent.Movies):
 	languages = [Locale.Language.English,  Locale.Language.Japanese]
 	primary_provider = True
 	accepts_from = ['com.plexapp.agents.localmedia']
-	contributes_to = ['com.plexapp.agents.imdb','com.plexapp.agents.data18']
+
 
 	def search(self, results, media, lang, manual):
 		Log('media.name:%s' % media.name)
@@ -31,7 +32,7 @@ class AvgleAgent(Agent.Movies):
 				video = videos[idx]
 				id = video['vid']
 				name = video['title']
-				name = titleChange(name)
+				name = name
 				year = media.year
 				score = 100 - (idx*5)
 				new_result = dict(id=id, name=name, year='', score=score, lang=lang)
@@ -48,7 +49,7 @@ class AvgleAgent(Agent.Movies):
 		if data['success']:
 			video = data['response']['video']
 			name = video['title']
-			name = titleChange(name)
+			name = name
 			metadata.title = name
 			metadata.tagline = video['keyword']
 			str = name + '\n'
@@ -70,13 +71,4 @@ class AvgleAgent(Agent.Movies):
 				try: metadata.posters[poster_url] = Proxy.Media(poster)
 				except: pass
 
-def titleChange(str):
-	p = re.compile('[a-zA-Z]+-\d+')
-	m = p.search(str)
-	if m:
-		name = m.group()
-		ret = str.replace(name, '').strip()
-		ret = '[%s] %s' % (name, ret)
-		return ret
-	else:
-		return str
+
