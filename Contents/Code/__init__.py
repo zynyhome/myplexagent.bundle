@@ -24,22 +24,19 @@ class OneJavAgent(Agent.Movies):
         query = String.URLEncode(String.StripDiacritics(title))
         Log('Search Query: %s' % str(SEARCH_URL % query))
 
-    for movie in HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]'):
-        name = movie.xpath('.//img[contains(@class,"level has-text-grey-dark")]')
-        id = movie.xpath('.//img[contains(@class,"title is-4 is-spaced")]/a')
-        score = 100 - (idx*5)
-        new_result = dict(id=id, name=name, year='', score=score)
-        results.Append(MetadataSearchResult(**new_result))
+        for movie in HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]'):
+            name = movie.xpath('.//img[contains(@class,"level has-text-grey-dark")]')
+            id = movie.xpath('.//img[contains(@class,"title is-4 is-spaced")]/a')
+            score = 100 - (idx*5)
+            new_result = dict(id=id, name=name, year='', score=score)
+            results.Append(MetadataSearchResult(**new_result))
 
 
     def update(self, metadata, media, lang): 
-        movie = HTML.ElementFromURL(ADE_MOVIE_INFO % metadata.id)
-        # Thumb and Poster
-        try:
+        for movie in HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]'):
             image = movie.xpath('.//img[contains(@class,"image")]')
             thumbUrl = image.get('src')
             thumb = HTTP.Request(thumbUrl)
             
             posterUrl = image.get('src')
             metadata.posters[posterUrl] = Proxy.Preview(thumb)
-        except: pass
