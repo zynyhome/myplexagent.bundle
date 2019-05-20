@@ -16,27 +16,33 @@ class OneJavAgent(Agent.Movies):
     primary_provider = True
     accepts_from = ['com.plexapp.agents.localmedia']
     
-    def search(self, results, media, lang):
-        title = media.name
-        if media.primary_metadata is not None:
-            title = media.primary_metadata.title
-  
-        query = String.URLEncode(String.StripDiacritics(title))
+    def search(self, results, media, lang, manual):
+        query = media.name.replace(' ', '-')
         Log('Search Query: %s' % str(SEARCH_URL % query))
 
         for movie in HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]'):
-            name = movie.xpath('.//img[contains(@class,"level has-text-grey-dark")]')
-            id = movie.xpath('.//img[contains(@class,"title is-4 is-spaced")]/a')
-            score = 100 - (idx*5)
-            new_result = dict(id=id, name=name, year='', score=score)
-            results.Append(MetadataSearchResult(**new_result))
-
+            movieid = movie.xpath('.//h5[contains(@class,"title is-4 is-spaced")]/a')[0].text_content().strip()
+            Log('Search Result: id: %s' % movieid)
+            results.Append(MetadataSearchResult(id=str(movieid), name=str(movieid), score=100,lang=lang))
+            
+        
+        results.Sort('score', descending=True)
+        Log(results)
 
     def update(self, metadata, media, lang): 
-        for movie in HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]'):
-            image = movie.xpath('.//img[contains(@class,"image")]')
+        query = metadata.id
+        Log('Update Query: %s' % str(SEARCH_URL % metadata.id))
+        try:
+            movie = HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]')[0]
+
+            #post
+            image = movie.xpath('.//img[contains(@class,"image")]')[0]
             thumbUrl = image.get('src')
             thumb = HTTP.Request(thumbUrl)
-            
             posterUrl = image.get('src')
             metadata.posters[posterUrl] = Proxy.Preview(thumb)
+
+            #name
+            metadata.title = metadata.id
+            metadata.movie.xpath('.//p[contains(@class,"level has-text-grey-dark")]')[0].text_content().strip()
+        except: pass
