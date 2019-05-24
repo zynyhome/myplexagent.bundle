@@ -3,9 +3,9 @@ import datetime
 import random
 import urllib2
 
-SEARCH_URL = 'https://onejav.com/search/%s'
+SEARCH_URL = 'https://www.buscdn.life/en/search/%s'
 
-curID = "onejav"
+curID = "buscdn"
 
 def search(query, results, media, lang):
     query = media.name.replace(' ', '-')
