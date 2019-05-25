@@ -2,12 +2,17 @@ import avgleAgent
 import onejavAgent
 import buscdnAgent
 import re
+import ssl
+from SSLEXTRA import sslOptions
+
+
 
 
 # URLS
 def Start():
     HTTP.CacheTime = CACHE_1MINUTE
-    HTTP.SetHeader('User-agent', 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.2; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)')
+    HTTP.Headers['User-Agent'] = 'Plex Media Server/%s' % Platform.ServerVersion
+    HTTP.Headers['Cookie'] = 'cok=1'
 
 class OneJavAgent(Agent.Movies):
     name = 'onejav'
@@ -36,8 +41,8 @@ class OneJavAgent(Agent.Movies):
 
             
         Log('query keyword :%s' % query)
-        onejavAgent.search(query,results,media,lang)
         buscdnAgent.search(query,results,media,lang)
+        onejavAgent.search(query,results,media,lang)
         avgleAgent.search(query,results,media,lang)
 
     def update(self, metadata, media, lang): 

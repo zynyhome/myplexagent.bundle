@@ -1,5 +1,4 @@
 SEARCH_URL = 'https://onejav.com/search/%s'
-
 curID = "onejav"
 
 def search(query, results, media, lang):
