@@ -1,5 +1,6 @@
 import avgleAgent
 import onejavAgent
+import buscdnAgent
 import re
 
 
@@ -36,8 +37,10 @@ class OneJavAgent(Agent.Movies):
             
         Log('query keyword :%s' % query)
         onejavAgent.search(query,results,media,lang)
+        buscdnAgent.search(query,results,media,lang)
         avgleAgent.search(query,results,media,lang)
 
     def update(self, metadata, media, lang): 
         onejavAgent.update(metadata,media,lang)
         avgleAgent.update(metadata,media,lang)
+        buscdnAgent.update(metadata,media,lang)

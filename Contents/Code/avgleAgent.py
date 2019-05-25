@@ -1,4 +1,3 @@
-import re
 import urllib2
 import json
 import ssl
@@ -6,23 +5,25 @@ import ssl
 
 curID = "avgle"
 def search(query, results, media, lang):
-	url = 'https://api.avgle.com/v1/jav/%s/0?limit=10' % query
-	Log('SEARCH URL:%s' % url)
-	request = urllib2.Request(url)
-	response = urllib2.urlopen(request, context=ssl.SSLContext(ssl.PROTOCOL_TLSv1))
-	data = json.load(response, encoding="utf-8")
-	Log('SEARCH DATA:%s' % data)
-	if data['success']:
-		videos = data['response']['videos']
-		for idx in range(0, len(videos)):
-			video = videos[idx]
-			id = video['vid']
-			name = video['title']
-			name = name
-			year = media.year
-			score = 90 - (idx*5)
-			new_result = dict(id= curID + "|" + str(id), name=name, year='', score=score, lang=lang)
-			results.Append(MetadataSearchResult(**new_result))
+	try:
+		url = 'https://api.avgle.com/v1/jav/%s/0?limit=10' % query
+		Log('SEARCH URL:%s' % url)
+		request = urllib2.Request(url)
+		response = urllib2.urlopen(request, context=ssl.SSLContext(ssl.PROTOCOL_TLSv1))
+		data = json.load(response, encoding="utf-8")
+		Log('SEARCH DATA:%s' % data)
+		if data['success']:
+			videos = data['response']['videos']
+			for idx in range(0, len(videos)):
+				video = videos[idx]
+				id = video['vid']
+				name = video['title']
+				name = name
+				year = media.year
+				score = 90 - (idx*5)
+				new_result = dict(id= curID + "|" + str(id), name=name, year='', score=score, lang=lang)
+				results.Append(MetadataSearchResult(**new_result))
+	except: pass
 
 def update(metadata, media, lang):
 

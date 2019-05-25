@@ -1,24 +1,20 @@
-import re
-import datetime
-import random
-import urllib2
-
 SEARCH_URL = 'https://onejav.com/search/%s'
 
 curID = "onejav"
 
 def search(query, results, media, lang):
-    query = media.name.replace(' ', '-')
-    Log('Search Query: %s' % str(SEARCH_URL % query))
+    try:
+        Log('Search Query: %s' % str(SEARCH_URL % query))
 
-    for movie in HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]'):
-        movieid = movie.xpath('.//h5[contains(@class,"title is-4 is-spaced")]/a')[0].text_content().strip()
-        Log('Search Result: id: %s' % movieid)
-        results.Append(MetadataSearchResult(id= curID + "|" + str(movieid), name=str(movieid), score=100,lang=lang))
+        for movie in HTML.ElementFromURL(SEARCH_URL % query).xpath('//div[contains(@class,"card mb-3")]'):
+            movieid = movie.xpath('.//h5[contains(@class,"title is-4 is-spaced")]/a')[0].text_content().strip()
+            Log('Search Result: id: %s' % movieid)
+            results.Append(MetadataSearchResult(id= curID + "|" + str(movieid), name=str(movieid), score=100,lang=lang))
+            
         
-    
-    results.Sort('score', descending=True)
-    Log(results)
+        results.Sort('score', descending=True)
+        Log(results)
+    except Exception as e: Log(e)
 
 def update(metadata, media, lang): 
 
@@ -40,4 +36,4 @@ def update(metadata, media, lang):
         #name
         metadata.title = metadata.id
         metadata.movie.xpath('.//p[contains(@class,"level has-text-grey-dark")]')[0].text_content().strip()
-    except: pass
+    except Exception as e: Log(e)
