@@ -19,6 +19,7 @@ def request(url):
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
+    #Log(urllib2.urlopen(request,context=ctx).read())
     return urllib2.urlopen(request,context=ctx).read()
 
 def elementToString(ele):
@@ -27,11 +28,7 @@ def elementToString(ele):
 def search(query, results, media, lang):
     try:
         url=str(SEARCH_URL % query)
-        
-    	#Log(urllib2.urlopen(request,context=ctx).read())
-
         for movie in getElementFromUrl(url).xpath('//a[contains(@class,"movie-box")]'):
-            Log('Search Result: %s' % movie)
             movieid = movie.get("href").replace('/',"_")
             results.Append(MetadataSearchResult(id= curID + "|" + str(movieid), name=str(movieid), score=100,lang=lang))
             
@@ -59,4 +56,14 @@ def update(metadata, media, lang):
         #name
         metadata.title = metadata.id
         #metadata.movie.xpath('.//p[contains(@class,"level has-text-grey-dark")]')[0].text_content().strip()
+
+        #actors
+        metadata.roles.clear()
+        for actor in  movie.xpath('.//div[@id="star-div"]'):
+            elementToString(actor)
+            img = actor.xpath('.//img')[0]
+            role = metadata.roles.new()
+            role.name = img.get("title")
+            role.photo = img.get("src")
+            
     except Exception as e: Log(e)
