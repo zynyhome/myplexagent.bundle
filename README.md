@@ -6,7 +6,7 @@ Plex Metadata Agent to fetch material from Multiple Site.
 20190525 - Plugin should be working. Please report back if you see any problems.
 
 ### Installnation
-Install with UAS - https://github.com/zysimplelife/myplexagent.bundle 351
+Install with UAS - https://github.com/zynyhome/myplexagent.bundle
 
 ### Filename Requirments
 FIle name must contains the ID for example 
