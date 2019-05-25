@@ -54,7 +54,8 @@ def update(metadata, media, lang):
         metadata.posters[posterUrl] = Proxy.Preview(thumb)
 
         #name
-        metadata.title = metadata.id
+        if movie.xpath('.//h3'):
+            metadata.title = movie.xpath('.//h3')[0].text_content().strip()
         #metadata.movie.xpath('.//p[contains(@class,"level has-text-grey-dark")]')[0].text_content().strip()
 
         #actors
