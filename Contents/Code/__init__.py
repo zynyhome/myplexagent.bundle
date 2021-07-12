@@ -5,6 +5,7 @@ import ssl
 
 # URLS
 def Start():
+    pass
 
 class JavAgent(Agent.Movies):
     name = 'javbus'
