@@ -68,10 +68,8 @@ def update(metadata, media, lang):
         movie = getElementFromUrl(query).xpath('//div[@class="container"]')[0]
         #post
         image = movie.xpath('.//a[contains(@class,"bigImage")]')[0]
-        thumbUrl = PIC_BASE_URL + image.get('href')
-        thumb = request(thumbUrl)
-        posterUrl = image.get('href')
-        metadata.posters[posterUrl] = Proxy.Preview(thumb)
+        posterUrl = PIC_BASE_URL + image.get('href')
+        metadata.posters[posterUrl] = Proxy.Preview(posterUrl)
 
         #name
         if movie.xpath('.//h3'):
@@ -81,9 +79,10 @@ def update(metadata, media, lang):
         metadata.roles.clear()
         for actor in  movie.xpath('.//div[@id="star-div"]'):
             elementToString(actor)
-            img = actor.xpath('.//img')[0]
-            role = metadata.roles.new()
-            role.name = img.get("title")
-            role.photo = img.get("src")
+            # TODO read actor info in another page
+            # img = actor.xpath('.//img')[0]
+            # role = metadata.roles.new()
+            # role.name = img.get("title")
+            # role.photo = img.get("src")
 
     except Exception as e: Log(e)
