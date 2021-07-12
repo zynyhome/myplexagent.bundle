@@ -80,9 +80,9 @@ def update(metadata, media, lang):
         for actor in  movie.xpath('.//div[@id="star-div"]'):
             elementToString(actor)
             # TODO read actor info in another page
-            # img = actor.xpath('.//img')[0]
-            # role = metadata.roles.new()
-            # role.name = img.get("title")
+            img = actor.xpath('.//img')[0]
+            role = metadata.roles.new()
+            role.name = img.get("title")
             # role.photo = img.get("src")
 
     except Exception as e: Log(e)
