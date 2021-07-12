@@ -6,6 +6,7 @@ from lxml import html
 
 
 SEARCH_URL = 'https://www.javbus.com/search/%s'
+PIC_BASE_URL = 'https://www.javbus.com/'
 curID = "javbus"
 
 def getElementFromUrl(url):
@@ -67,7 +68,7 @@ def update(metadata, media, lang):
         movie = getElementFromUrl(query).xpath('//div[@class="container"]')[0]
         #post
         image = movie.xpath('.//a[contains(@class,"bigImage")]')[0]
-        thumbUrl = image.get('href')
+        thumbUrl = PIC_BASE_URL + image.get('href')
         thumb = request(thumbUrl)
         posterUrl = image.get('href')
         metadata.posters[posterUrl] = Proxy.Preview(thumb)
@@ -75,7 +76,6 @@ def update(metadata, media, lang):
         #name
         if movie.xpath('.//h3'):
             metadata.title = movie.xpath('.//h3')[0].text_content().strip()
-        #metadata.movie.xpath('.//p[contains(@class,"level has-text-grey-dark")]')[0].text_content().strip()
 
         #actors
         metadata.roles.clear()
