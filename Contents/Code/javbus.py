@@ -19,7 +19,6 @@ def request(url):
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
-    #Log(urllib2.urlopen(request,context=ctx).read())
     return urllib2.urlopen(request,context=ctx).read()
 
 def elementToString(ele):
@@ -29,53 +28,25 @@ def search(query, results, media, lang):
     try:
         url=str(SEARCH_URL % query)
         for movie in getElementFromUrl(url).xpath('//a[contains(@class,"movie-box")]'):
-            movieid = movie.get("href").replace('/',"_")
-            image = movie.xpath('.//img')[0]
-            posterUrl = PIC_BASE_URL + image.get('src')
-
-            results.Append(MetadataSearchResult(id= curID + "|" + str(movieid), name=str(posterUrl), score=100,lang=lang))
+            url = movie.get("href")
+            img = PIC_BASE_URL + movie.xpath('.//img')[0].get("src")
+            results.Append(MetadataSearchResult(id=curID, thumb=img , name=query, score=100,lang=lang))
 
         results.Sort('score', descending=True)
-        Log(results)
-    except Exception as e: Log(e)
-
-# def query_metadata(query):
-#     metadata = dict()
-#     movie = getElementFromUrl(query).xpath('//div[@class="container"]')[0]
-#     print(movie)
-
-#     image = movie.xpath('.//a[contains(@class,"bigImage")]')[0]
-#     metadata['posterUrl'] = image.get('href')
-#     if movie.xpath('.//h3'):
-#         metadata['title'] = movie.xpath('.//h3')[0].text_content().strip()
-
-#     metadata['roles'] = []
-
-#     for actor in  movie.xpath('.//div[@id="star-div"]'):
-#             elementToString(actor)
-#             img = actor.xpath('.//img')[0]
-#             role = dict()
-#             role['name'] = img.get("title")
-#             role['photo'] = img.get("src")
-#             metadata['roles'].append(role)
-#     return metadata
+    except Exception as e: pass
 
 
 def update(metadata, media, lang):
-    if curID != str(metadata.id).split("|")[0]:
-        return
-
-
     try:
-        query = str(metadata.id).split("|")[1].replace('_','/')
-        movie = getElementFromUrl(query).xpath('//div[@class="container"]')[0]
+        url=str(SEARCH_URL % media.title)
+        link = getElementFromUrl(url).xpath('//a[contains(@class,"movie-box")]')[0]
+        movie = getElementFromUrl(link.get("href")).xpath('//div[@class="container"]')[0]
         #post
         #  the horizon form which are not suiable for plex
         #  let use the thumb instead
-
         # image = movie.xpath('.//a[contains(@class,"bigImage")]')[0]
-        # posterUrl = PIC_BASE_URL + image.get('href')
-        thumb = str(metadata.name)
+
+        thumb = PIC_BASE_URL + link.xpath('.//img')[0].get("src")
         metadata.posters[thumb] = Proxy.Preview(thumb)
 
         #name
