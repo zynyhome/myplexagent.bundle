@@ -30,7 +30,10 @@ def search(query, results, media, lang):
         url=str(SEARCH_URL % query)
         for movie in getElementFromUrl(url).xpath('//a[contains(@class,"movie-box")]'):
             movieid = movie.get("href").replace('/',"_")
-            results.Append(MetadataSearchResult(id= curID + "|" + str(movieid), name=str(movieid), score=100,lang=lang))
+            image = movie.xpath('.//img')[0]
+            posterUrl = PIC_BASE_URL + image.get('src')
+
+            results.Append(MetadataSearchResult(id= curID + "|" + str(movieid), name=str(posterUrl), score=100,lang=lang))
 
         results.Sort('score', descending=True)
         Log(results)
@@ -67,9 +70,13 @@ def update(metadata, media, lang):
         query = str(metadata.id).split("|")[1].replace('_','/')
         movie = getElementFromUrl(query).xpath('//div[@class="container"]')[0]
         #post
-        image = movie.xpath('.//a[contains(@class,"bigImage")]')[0]
-        posterUrl = PIC_BASE_URL + image.get('href')
-        metadata.posters[posterUrl] = Proxy.Preview(posterUrl)
+        #  the horizon form which are not suiable for plex
+        #  let use the thumb instead
+
+        # image = movie.xpath('.//a[contains(@class,"bigImage")]')[0]
+        # posterUrl = PIC_BASE_URL + image.get('href')
+        thumb = str(metadata.name)
+        metadata.posters[thumb] = Proxy.Preview(thumb)
 
         #name
         if movie.xpath('.//h3'):
@@ -84,5 +91,11 @@ def update(metadata, media, lang):
             role = metadata.roles.new()
             role.name = img.get("title")
             # role.photo = img.get("src")
+
+        # TODO Genres.
+        # if len(movie.xpath('genre')) > 0:
+        #     metadata.genres.clear()
+        #     for genre in [g.get('genre') for g in movie.xpath('genre')]:
+        #     metadata.genres.add(genre)
 
     except Exception as e: Log(e)
