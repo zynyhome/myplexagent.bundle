@@ -19,3 +19,11 @@ FIle name must contains the ID for example
 ### Donation [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/zysimplelife)
 
 If this plugin help to to show meta data your mass of jav, it is welcome to donate me with what ever you like. This is of course not a requirement and we still love you anyway.
+
+
+### local debug 
+
+#### qnap
+```bash
+scp *.py admin@[ip]:"'/share/CACHEDEV2_DATA/.qpkg/PlexMediaServer/Library/Plex Media Server/Plug-ins/myplexagent.bundle/Contents/Code/'"
+```
