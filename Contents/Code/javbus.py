@@ -39,16 +39,20 @@ def update(metadata, media, lang):
     if curID != str(metadata.id).split("|")[0]:
         return
     try:
-        url=str(SEARCH_URL % media.title)
+        url=str(SEARCH_URL % str(metadata.id).split("|")[1])
         link = getElementFromUrl(url).xpath('//a[contains(@class,"movie-box")]')[0]
         movie = getElementFromUrl(link.get("href")).xpath('//div[@class="container"]')[0]
         #post
         #  the horizon form which are not suiable for plex
         #  let use the thumb instead
-        # image = movie.xpath('.//a[contains(@class,"bigImage")]')[0]
 
         thumb = PIC_BASE_URL + link.xpath('.//img')[0].get("src")
         metadata.posters[thumb] = Proxy.Preview(thumb)
+
+        #art
+        bigImage = PIC_BASE_URL+ movie.xpath('.//a[contains(@class,"bigImage")]')[0].get('href')
+        metadata.art[bigImage] = Proxy.Preview(bigImage)
+
 
         #name
         if movie.xpath('.//h3'):
