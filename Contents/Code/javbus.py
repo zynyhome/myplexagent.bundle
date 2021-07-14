@@ -28,15 +28,16 @@ def search(query, results, media, lang):
     try:
         url=str(SEARCH_URL % query)
         for movie in getElementFromUrl(url).xpath('//a[contains(@class,"movie-box")]'):
-            url = movie.get("href")
             img = PIC_BASE_URL + movie.xpath('.//img')[0].get("src")
-            results.Append(MetadataSearchResult(id=curID, thumb=img , name=query, score=100,lang=lang))
+            results.Append(MetadataSearchResult(id=curID + "|" + str(query), thumb=img , name=query, score=100,lang=lang))
 
         results.Sort('score', descending=True)
     except Exception as e: pass
 
 
 def update(metadata, media, lang):
+    if curID != str(metadata.id).split("|")[0]:
+        return
     try:
         url=str(SEARCH_URL % media.title)
         link = getElementFromUrl(url).xpath('//a[contains(@class,"movie-box")]')[0]
